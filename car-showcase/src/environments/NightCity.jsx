@@ -1,13 +1,9 @@
 import { useGLTF } from "@react-three/drei";
 import RiseGroup from "./RiseGroup";
 import Ground from "./Ground";
-import Building from "./Building";
 import Sun from "./Sun";
+import Showroom from "../components/Showroom";
 import PersonLibrary from "../components/PersonLibrary";
-import { ringPoints } from "./layout";
-
-const foregroundSpots = ringPoints(12, 14, 2);
-const backgroundSpots = ringPoints(60, 35, 10);
 
 // People walking around car platform using real GLB models
 const peopleSpots = [
@@ -38,21 +34,8 @@ export default function NightCity({ active }) {
       <Ground color="#0a0a1a" />
       <Sun />
 
-      {/* Background city skyline */}
-      {backgroundSpots.map((p, i) => {
-        const h = 20 + Math.sin(i * 0.8) * 15 + (i * 3) % 40;
-        return (
-          <Building key={`bg-${p.i}`} x={p.x} z={p.z} h={h} />
-        );
-      })}
-
-      {/* Foreground buildings near platform */}
-      {foregroundSpots.map((p, i) => {
-        const h = 5 + Math.cos(i) * 2 + (i * 1.5) % 6;
-        return (
-          <Building key={`fg-${p.i}`} x={p.x} z={p.z} h={h} />
-        );
-      })}
+      {/* Car showroom building behind the people */}
+      <Showroom position={[0, 0, -17]} name="Manish Showroom" />
 
       {/* People walking around car in loop */}
       <PersonLibrary people={peopleSpots} models={models} />
