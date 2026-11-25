@@ -22,16 +22,62 @@ const resetBtn = {
   backdropFilter: "blur(6px)",
 };
 
+const panel = {
+  position: "absolute",
+  top: 20,
+  right: 20,
+  zIndex: 10,
+  display: "flex",
+  flexDirection: "column",
+  gap: 8,
+  padding: 14,
+  borderRadius: 12,
+  background: "rgba(0,0,0,0.45)",
+  backdropFilter: "blur(6px)",
+};
+
+const toggleRow = {
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+  color: "#fff",
+  fontFamily: "sans-serif",
+  fontSize: 14,
+  cursor: "pointer",
+  userSelect: "none",
+};
+
+const TOGGLES = [
+  { key: "rotate", label: "Auto-Rotate" },
+  { key: "beams", label: "Light Beams" },
+  { key: "particles", label: "Particles" },
+  { key: "hotspots", label: "Hotspots" },
+];
+
 export default function App() {
   const [carColor, setCarColor] = useState("#e74c3c");
   const [resetSignal, setResetSignal] = useState(0);
+  const [options, setOptions] = useState({
+    rotate: true,
+    beams: true,
+    particles: true,
+    hotspots: false,
+  });
   const env = envs[0];
+
+  const toggle = (key) =>
+    setOptions((o) => ({ ...o, [key]: !o[key] }));
 
   return (
     <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
       <Canvas shadows dpr={[1, 1.5]} camera={{ position: [6, 2.5, 7], fov: 45 }}>
         <Environment preset="city" background={true} intensity={1} />
-        <Scene index={0} carColor={carColor} resetSignal={resetSignal} />
+        <Scene
+          index={0}
+          carColor={carColor}
+          resetSignal={resetSignal}
+          options={options}
+        />
       </Canvas>
       <Loader />
       <Overlay title={env.name} />
@@ -39,6 +85,18 @@ export default function App() {
       <button style={resetBtn} onClick={() => setResetSignal((s) => s + 1)}>
         Reset View
       </button>
+      <div style={panel}>
+        {TOGGLES.map((t) => (
+          <label key={t.key} style={toggleRow}>
+            <input
+              type="checkbox"
+              checked={options[t.key]}
+              onChange={() => toggle(t.key)}
+            />
+            {t.label}
+          </label>
+        ))}
+      </div>
     </div>
   );
 }

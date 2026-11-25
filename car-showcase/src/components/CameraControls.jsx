@@ -1,7 +1,7 @@
 import { OrbitControls } from "@react-three/drei";
 import { useRef, useEffect } from "react";
 
-export default function CameraControls({ resetSignal = 0 }) {
+export default function CameraControls({ resetSignal = 0, autoRotate = false }) {
   const ref = useRef();
 
   useEffect(() => {
@@ -17,6 +17,8 @@ export default function CameraControls({ resetSignal = 0 }) {
       maxDistance={16}
       maxPolarAngle={Math.PI / 2 - 0.05}
       enableDamping
+      autoRotate={autoRotate}
+      autoRotateSpeed={1.2}
     />
   );
 }
