@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useMemo } from "react";
 
 const BODY_KEYWORDS = ["body", "door", "bumper", "hood", "viper", "railings", "logo", "chest"];
 
@@ -25,13 +25,14 @@ export default function Car({ color = "#e74c3c" }) {
     });
   }, [color]);
 
-  const box = new THREE.Box3().setFromObject(scene);
-  const size = box.getSize(new THREE.Vector3());
-  const center = box.getCenter(new THREE.Vector3());
-  const bottom = center.y - size.y / 2;
-
-  const maxDim = Math.max(size.x, size.y, size.z);
-  const scale = 5 / maxDim;
+  const { center, bottom, scale } = useMemo(() => {
+    const box = new THREE.Box3().setFromObject(scene);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const bottom = center.y - size.y / 2;
+    const maxDim = Math.max(size.x, size.y, size.z);
+    return { center, bottom, scale: 5 / maxDim };
+  }, [scene]);
 
   return (
     <group
@@ -42,3 +43,5 @@ export default function Car({ color = "#e74c3c" }) {
     </group>
   );
 }
+
+useGLTF.preload("/car.glb");

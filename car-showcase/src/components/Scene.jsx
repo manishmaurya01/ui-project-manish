@@ -1,3 +1,4 @@
+import { ContactShadows } from "@react-three/drei";
 import { envs } from "../data";
 import Atmosphere from "./Atmosphere";
 import Lights from "./Lights";
@@ -6,7 +7,7 @@ import Car from "./Car";
 import CameraControls from "./CameraControls";
 import NightCity from "../environments/NightCity";
 
-export default function Scene({ index, carColor }) {
+export default function Scene({ index, carColor, resetSignal }) {
   const env = envs[index];
   return (
     <>
@@ -14,8 +15,17 @@ export default function Scene({ index, carColor }) {
       <Lights />
       <Platform ringColor={env.ring} />
       <Car color={carColor} />
-      <NightCity active={index === 0} />
-      <CameraControls />
+      <ContactShadows
+        position={[0, 0.23, 0]}
+        opacity={0.6}
+        scale={9}
+        blur={2.5}
+        far={4}
+        resolution={256}
+        color="#000000"
+      />
+      <NightCity active={index === 0} showroom={env.showroom} />
+      <CameraControls resetSignal={resetSignal} />
     </>
   );
 }

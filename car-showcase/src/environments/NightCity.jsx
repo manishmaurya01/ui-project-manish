@@ -5,7 +5,7 @@ import Sun from "./Sun";
 import Showroom from "../components/Showroom";
 import PersonLibrary from "../components/PersonLibrary";
 
-// People walking around car platform using real GLB models
+// People standing around the car platform using real GLB models
 const peopleSpots = [
   { id: "p1", x: 6, z: 0, model: "/person1.glb", speed: 0.6, delay: 0 },
   { id: "p2", x: -6, z: 0, model: "/person2.glb", speed: 0.5, delay: 0.5 },
@@ -21,7 +21,7 @@ const peopleSpots = [
   { id: "p12", x: -3, z: -8, model: "/person1.glb", speed: 0.55, delay: 2.0 },
 ];
 
-export default function NightCity({ active }) {
+export default function NightCity({ active, showroom }) {
   const model1 = useGLTF("/person1.glb");
   const model2 = useGLTF("/person2.glb");
   const models = {
@@ -35,10 +35,15 @@ export default function NightCity({ active }) {
       <Sun />
 
       {/* Car showroom building behind the people */}
-      <Showroom position={[0, 0, -17]} name="Manish Showroom" />
+      {showroom && (
+        <Showroom position={showroom.position} name={showroom.name} />
+      )}
 
-      {/* People walking around car in loop */}
+      {/* People standing around the car */}
       <PersonLibrary people={peopleSpots} models={models} />
     </RiseGroup>
   );
 }
+
+useGLTF.preload("/person1.glb");
+useGLTF.preload("/person2.glb");
