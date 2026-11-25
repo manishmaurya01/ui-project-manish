@@ -5,7 +5,6 @@ import Platform from "./Platform";
 import Car from "./Car";
 import CameraControls from "./CameraControls";
 import NightCity from "../environments/NightCity";
-import Desert from "../environments/Desert";
 
 export default function Scene({ index }) {
   const env = envs[index];
@@ -16,7 +15,6 @@ export default function Scene({ index }) {
       <Platform ringColor={env.ring} />
       <Car />
       <NightCity active={index === 0} />
-      <Desert active={index === 1} />
       <CameraControls />
     </>
   );
