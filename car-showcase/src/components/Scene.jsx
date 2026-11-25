@@ -6,14 +6,14 @@ import Car from "./Car";
 import CameraControls from "./CameraControls";
 import NightCity from "../environments/NightCity";
 
-export default function Scene({ index }) {
+export default function Scene({ index, carColor }) {
   const env = envs[index];
   return (
     <>
       <Atmosphere color={env.sky} />
       <Lights />
       <Platform ringColor={env.ring} />
-      <Car />
+      <Car color={carColor} />
       <NightCity active={index === 0} />
       <CameraControls />
     </>

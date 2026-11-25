@@ -1,8 +1,30 @@
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { useRef, useEffect } from "react";
 
-export default function Car() {
+const BODY_KEYWORDS = ["body", "door", "bumper", "hood", "viper", "railings", "logo", "chest"];
+
+export default function Car({ color = "#e74c3c" }) {
   const { scene } = useGLTF("/car.glb");
+  const bodyMaterials = useRef(new Map());
+
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (child.isMesh && child.material) {
+        const name = child.name.toLowerCase();
+        if (BODY_KEYWORDS.some((kw) => name.includes(kw))) {
+          bodyMaterials.current.set(child, child.material);
+        }
+      }
+    });
+  }, [scene]);
+
+  useEffect(() => {
+    bodyMaterials.current.forEach((mat) => {
+      mat.color.set(color);
+    });
+  }, [color]);
+
   const box = new THREE.Box3().setFromObject(scene);
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
