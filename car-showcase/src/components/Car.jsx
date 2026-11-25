@@ -4,11 +4,12 @@ import { useRef, useEffect, useMemo } from "react";
 
 const BODY_KEYWORDS = ["body", "door", "bumper", "hood", "viper", "railings", "logo", "chest"];
 
-export default function Car({ color = "#e74c3c" }) {
-  const { scene } = useGLTF("/car.glb");
+export default function Car({ color = "#e74c3c", model = "/car.glb" }) {
+  const { scene } = useGLTF(model);
   const bodyMaterials = useRef(new Map());
 
   useEffect(() => {
+    bodyMaterials.current = new Map();
     scene.traverse((child) => {
       if (child.isMesh && child.material) {
         const name = child.name.toLowerCase();
@@ -23,7 +24,7 @@ export default function Car({ color = "#e74c3c" }) {
     bodyMaterials.current.forEach((mat) => {
       mat.color.set(color);
     });
-  }, [color]);
+  }, [color, scene]);
 
   const { center, bottom, scale } = useMemo(() => {
     const box = new THREE.Box3().setFromObject(scene);
@@ -39,9 +40,11 @@ export default function Car({ color = "#e74c3c" }) {
       position={[-center.x * scale, -bottom * scale + 0.2, -center.z * scale]}
       scale={[scale, scale, scale]}
     >
-      <primitive object={scene} castShadow receiveShadow />
+      <primitive key={model} object={scene} castShadow receiveShadow />
     </group>
   );
 }
 
 useGLTF.preload("/car.glb");
+useGLTF.preload("/car2.glb");
+useGLTF.preload("/car3.glb");

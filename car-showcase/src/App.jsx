@@ -5,7 +5,7 @@ import Scene from "./components/Scene";
 import Overlay from "./ui/Overlay";
 import ColorOptions from "./ui/ColorOptions";
 import Loader from "./ui/Loader";
-import { envs } from "./data";
+import { envs, cars } from "./data";
 
 const resetBtn = {
   position: "absolute",
@@ -47,6 +47,40 @@ const toggleRow = {
   userSelect: "none",
 };
 
+const navWrap = {
+  position: "absolute",
+  bottom: 88,
+  left: "50%",
+  transform: "translateX(-50%)",
+  zIndex: 10,
+  display: "flex",
+  alignItems: "center",
+  gap: 18,
+};
+
+const navBtn = {
+  width: 44,
+  height: 44,
+  borderRadius: "50%",
+  border: "1px solid rgba(255,255,255,0.3)",
+  background: "rgba(0,0,0,0.5)",
+  color: "#fff",
+  fontSize: 20,
+  cursor: "pointer",
+  backdropFilter: "blur(6px)",
+};
+
+const carName = {
+  color: "#fff",
+  fontFamily: "sans-serif",
+  fontWeight: 700,
+  fontSize: 18,
+  letterSpacing: 1,
+  minWidth: 140,
+  textAlign: "center",
+  textShadow: "0 0 10px rgba(255,60,172,0.7)",
+};
+
 const TOGGLES = [
   { key: "rotate", label: "Auto-Rotate" },
   { key: "beams", label: "Light Beams" },
@@ -56,6 +90,7 @@ const TOGGLES = [
 
 export default function App() {
   const [carColor, setCarColor] = useState("#e74c3c");
+  const [carIndex, setCarIndex] = useState(0);
   const [resetSignal, setResetSignal] = useState(0);
   const [options, setOptions] = useState({
     rotate: true,
@@ -64,9 +99,15 @@ export default function App() {
     hotspots: false,
   });
   const env = envs[0];
+  const car = cars[carIndex];
 
   const toggle = (key) =>
     setOptions((o) => ({ ...o, [key]: !o[key] }));
+
+  const prevCar = () =>
+    setCarIndex((i) => (i - 1 + cars.length) % cars.length);
+  const nextCar = () =>
+    setCarIndex((i) => (i + 1) % cars.length);
 
   return (
     <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
@@ -75,6 +116,7 @@ export default function App() {
         <Scene
           index={0}
           carColor={carColor}
+          carModel={car.model}
           resetSignal={resetSignal}
           options={options}
         />
@@ -82,6 +124,15 @@ export default function App() {
       <Loader />
       <Overlay title={env.name} />
       <ColorOptions carColor={carColor} setCarColor={setCarColor} />
+      <div style={navWrap}>
+        <button style={navBtn} onClick={prevCar} aria-label="Previous car">
+          ‹
+        </button>
+        <span style={carName}>{car.name}</span>
+        <button style={navBtn} onClick={nextCar} aria-label="Next car">
+          ›
+        </button>
+      </div>
       <button style={resetBtn} onClick={() => setResetSignal((s) => s + 1)}>
         Reset View
       </button>

@@ -1,3 +1,9 @@
+export const cars = [
+  { model: "/car.glb", name: "Vortex GT" },
+  { model: "/car2.glb", name: "Apex S" },
+  { model: "/car3.glb", name: "Nova X" },
+];
+
 export const envs = [
   {
     name: "Manish Showroom",

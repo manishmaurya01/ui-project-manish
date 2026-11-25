@@ -11,7 +11,7 @@ import NeonFloor from "./NeonFloor";
 import Hotspots from "./Hotspots";
 import NightCity from "../environments/NightCity";
 
-export default function Scene({ index, carColor, resetSignal, options }) {
+export default function Scene({ index, carColor, carModel, resetSignal, options }) {
   const env = envs[index];
   return (
     <>
@@ -19,7 +19,7 @@ export default function Scene({ index, carColor, resetSignal, options }) {
       <Lights />
       <Platform ringColor={env.ring} />
       <NeonFloor />
-      <Car color={carColor} />
+      <Car color={carColor} model={carModel} />
       <ContactShadows
         position={[0, 0.23, 0]}
         opacity={0.6}
