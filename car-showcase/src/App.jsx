@@ -22,6 +22,14 @@ const resetBtn = {
   backdropFilter: "blur(6px)",
 };
 
+const driveBtn = {
+  ...resetBtn,
+  right: 130,
+  background: "linear-gradient(90deg,#ff3cac,#3498db)",
+  border: "none",
+  fontWeight: 700,
+};
+
 const panel = {
   position: "absolute",
   top: 20,
@@ -81,6 +89,22 @@ const carName = {
   textShadow: "0 0 10px rgba(255,60,172,0.7)",
 };
 
+const helpText = {
+  position: "absolute",
+  bottom: 24,
+  left: "50%",
+  transform: "translateX(-50%)",
+  zIndex: 10,
+  padding: "8px 16px",
+  borderRadius: 8,
+  background: "rgba(0,0,0,0.5)",
+  color: "#fff",
+  fontFamily: "sans-serif",
+  fontSize: 14,
+  letterSpacing: 1,
+  backdropFilter: "blur(6px)",
+};
+
 const TOGGLES = [
   { key: "rotate", label: "Auto-Rotate" },
   { key: "beams", label: "Light Beams" },
@@ -92,6 +116,7 @@ export default function App() {
   const [carColor, setCarColor] = useState("#e74c3c");
   const [carIndex, setCarIndex] = useState(0);
   const [resetSignal, setResetSignal] = useState(0);
+  const [driveMode, setDriveMode] = useState(false);
   const [options, setOptions] = useState({
     rotate: true,
     beams: true,
@@ -119,35 +144,54 @@ export default function App() {
           carModel={car.model}
           resetSignal={resetSignal}
           options={options}
+          drive={driveMode}
         />
       </Canvas>
       <Loader />
-      <Overlay title={env.name} />
+      {!driveMode && <Overlay title={env.name} />}
       <ColorOptions carColor={carColor} setCarColor={setCarColor} />
-      <div style={navWrap}>
-        <button style={navBtn} onClick={prevCar} aria-label="Previous car">
-          ‹
+      {!driveMode && (
+        <div style={navWrap}>
+          <button style={navBtn} onClick={prevCar} aria-label="Previous car">
+            ‹
+          </button>
+          <span style={carName}>{car.name}</span>
+          <button style={navBtn} onClick={nextCar} aria-label="Next car">
+            ›
+          </button>
+        </div>
+      )}
+      {driveMode ? (
+        <>
+          <div style={helpText}>W / S — Forward / Back · A / D — Steer · Drag / Scroll — Camera</div>
+          <button style={driveBtn} onClick={() => setDriveMode(false)}>
+            Exit Test Drive
+          </button>
+        </>
+      ) : (
+        <button style={driveBtn} onClick={() => setDriveMode(true)}>
+          Test Drive
         </button>
-        <span style={carName}>{car.name}</span>
-        <button style={navBtn} onClick={nextCar} aria-label="Next car">
-          ›
-        </button>
-      </div>
-      <button style={resetBtn} onClick={() => setResetSignal((s) => s + 1)}>
-        Reset View
-      </button>
-      <div style={panel}>
-        {TOGGLES.map((t) => (
-          <label key={t.key} style={toggleRow}>
-            <input
-              type="checkbox"
-              checked={options[t.key]}
-              onChange={() => toggle(t.key)}
-            />
-            {t.label}
-          </label>
-        ))}
-      </div>
+      )}
+      {!driveMode && (
+        <>
+          <button style={resetBtn} onClick={() => setResetSignal((s) => s + 1)}>
+            Reset View
+          </button>
+          <div style={panel}>
+            {TOGGLES.map((t) => (
+              <label key={t.key} style={toggleRow}>
+                <input
+                  type="checkbox"
+                  checked={options[t.key]}
+                  onChange={() => toggle(t.key)}
+                />
+                {t.label}
+              </label>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
